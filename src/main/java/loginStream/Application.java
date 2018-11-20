@@ -1,19 +1,15 @@
 package loginStream;
 
-import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient;
 import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException;
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
 import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde;
-import kafka.security.auth.Topic;
 import loginStream.avroSchema.AvroSchema;
 import loginStream.serialization.JsonPOJODeserializer;
 import loginStream.serialization.JsonPOJOSerializer;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.commons.io.IOUtils;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.protocol.types.Field;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
@@ -128,19 +124,16 @@ public class Application {
         return Serdes.serdeFrom(loginDataSerializer, loginDataDeserializer);
     }
 
-    public static GenericRecord buildRecord(LoginAttackCount loginAttackCount) throws IOException {
+    private static GenericRecord buildRecord(LoginAttackCount loginAttackCount) throws IOException {
         // avro schema avsc file path.
         String schemaPath = "src/main/java/loginStream/login-attack-count.avsc";
 
-        String schemaString = null;
+        String schemaString;
 
-        FileInputStream inputStream = new FileInputStream(schemaPath);
-        try {
+        try (FileInputStream inputStream = new FileInputStream(schemaPath)) {
             schemaString = org.apache.commons.io.IOUtils.toString(inputStream);
         } catch (Exception e) {
             throw new RuntimeException(e);
-        } finally {
-            inputStream.close();
         }
         Schema schema = new Schema.Parser().parse(schemaString);
         GenericData.Record record = new GenericData.Record(schema);
@@ -153,52 +146,5 @@ public class Application {
         return record;
     }
 
-    public static class LoginData {
-        String userName;
-        String userPassword;
-        String ip;
-        Long date;
 
-        public LoginData() {
-        }
-
-        public LoginData(String userName, String userPassword, String ip, Long date) {
-            this.userName = userName;
-            this.userPassword = userPassword;
-            this.ip = ip;
-            this.date = date;
-        }
-
-        public String getUserName() {
-            return userName;
-        }
-
-        public void setUserName(String userName) {
-            this.userName = userName;
-        }
-
-        public String getUserPassword() {
-            return userPassword;
-        }
-
-        public void setUserPassword(String userPassword) {
-            this.userPassword = userPassword;
-        }
-
-        public String getIp() {
-            return ip;
-        }
-
-        public void setIp(String ip) {
-            this.ip = ip;
-        }
-
-        public Long getDate() {
-            return date;
-        }
-
-        public void setDate(Long date) {
-            this.date = date;
-        }
-    }
 }
