@@ -1,6 +1,7 @@
-# kafka-stream-fuse-day
+### kafka-stream-fuse-day-Tikal
 This Repository is a Kafka Stream example that read data from one topic, do some aggregation, and write this in Avro format to output topic. the elasticsearch connect can send this to elasticsearch and create a matching topic.
 
+#quick scan on its work:
 
 read data from input topic in this format:
 (to have this input you can pull https://github.com/brachi-wernick/kafka-login-producer and follow steps there)
@@ -85,3 +86,29 @@ curl -XGET 'http://localhost:9200/test-elasticsearch-sink/_search?pretty'
 :
 ![Here are nice dashboard I did in Kibana](src/main/resources/kibana-dashboard.png)
 
+
+##To run teh demo E2E
+
+To run the demo end to end
+
+1. Git pull 
+https://github.com/brachi-wernick/kafka-login-producer
+
+https://github.com/brachi-wernick/kafka-stream-fuse-day
+
+2. Download Kafka https://www.apache.org/dyn/closer.cgi?path=/kafka/2.0.0/kafka_2.11-2.0.0.tgz
+3. Start zookeeper ./bin/zookeeper-server-start.sh config/zookeeper.properties
+4. Start Kafka server  ./bin/kafka-server-start.sh config/server.properties
+5. Start schema regsitration in Confluent
+./bin/schema-registry-start etc/schema-registry/schema-registry.properties
+6. Download elastic and start it: ./bin/elasticsearch
+7. Start Kibana ./bin/kibana 
+8. Run kafka-login-producer, and send login request in this format:
+            {
+              "username":"Foo",
+              "password":"567"
+            }
+9. Run kafka-stream-fuse-day 
+10. Connect to elastic from confluent
+./bin/connect-standalone etc/schema-registry/connect-avro-standalone.properties \
+etc/kafka-connect-elasticsearch/quickstart-elasticsearch.properties
