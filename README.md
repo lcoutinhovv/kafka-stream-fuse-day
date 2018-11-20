@@ -112,3 +112,6 @@ https://github.com/brachi-wernick/kafka-stream-fuse-day
 10. Connect to elastic from confluent
 ./bin/connect-standalone etc/schema-registry/connect-avro-standalone.properties \
 etc/kafka-connect-elasticsearch/quickstart-elasticsearch.properties
+
+
+![Full flow](src/main/resources/diagram.png)
