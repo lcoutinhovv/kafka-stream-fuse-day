@@ -1,8 +1,9 @@
 # kafka-stream-fuse-day
 This Repository is a Kafka Stream example that read data from one topic, do some aggregation, and write this in Avro format to output topic. the elasticsearch connect can send this to elasticsearch and create a matching topic.
 
-read data from input topic in this format:
 
+read data from input topic in this format:
+(to have this input you can pull https://github.com/brachi-wernick/kafka-login-producer and follow steps there)
 ```java
 public class LoginData {
     String userName;
@@ -48,6 +49,12 @@ curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
 And then, write this to output topic 
 ```java
 .to(TOPIC, Produced.with(stringSerde, genericAvroSerde));
+```
+
+If topic isn't create automatically run:
+```
+bin/kafka-topics.sh --create --topic attack\
+ --zookeeper localhost:2181 --partitions 1 --replication-factor 1
 ```
 
 Finally this could be integrated easily with Elasticsearch
