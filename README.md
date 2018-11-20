@@ -34,7 +34,16 @@ KTable<Windowed<String>, Long> counts = source
 ```
 
 create Avro Record, different schema, including the aggregation and time slicing from previous step
-see method loginStream.Application.buildRecord
+see method `loginStream.Application.buildRecord`
+
+In order to cause make this happen, you need to register schema. look in class `loginStream.avroSchema.AvroSchema` which handle schema registration.
+this can be done also in the CLI:
+for example
+```
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
+  --data '{ "schema": "{ \"type\": \"record\", \"name\": \"Persone\”, \"namespace\": \"com.ippontech.kafkatutorialse\”, \"fields\": [ { \"name\": \"firstName\", \"type\": \"string\" }, { \"name\": \"lastName\", \"type\": \"string\" }, { \"name\": \"birthDate\", \"type\": \"long\" } ]}" }' \
+  http://localhost:8081/subjects/persons-avro-value/versions
+```
 
 And then, write this to output topic 
 ```java
@@ -66,4 +75,6 @@ curl -XGET 'http://localhost:9200/test-elasticsearch-sink/_search?pretty'
 ```
 
 
-and here we have nice schema:
+:
+![Here are nice dashboard I did in Kibana](src/main/resources/kibana-dashboard.png)
+
