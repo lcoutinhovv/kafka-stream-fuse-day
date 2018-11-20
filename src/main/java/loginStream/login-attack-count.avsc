@@ -1,0 +1,24 @@
+{
+  "type": "record",
+  "name": "myrecord",
+  "namespace": "loginStream",
+  "fields": [
+    {
+      "name": "userName",
+      "type": "string"
+    },
+    {
+      "name": "counter",
+      "type":"int"
+    },
+    {
+      "name": "start",
+      "type":"int"
+    },
+    {
+      "name": "to",
+      "type":"int"
+    }
+
+  ]
+}
